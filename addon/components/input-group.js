@@ -92,7 +92,10 @@ export default Ember.Component.extend({
       [ 'modelPath', 'property' ]
     );
 
+    console.log('in propertyWithModel');
+
     if (modelPath) {
+      console.log('in modelPath propertyWithModel', `${modelPath}.${property}`);
       return `${modelPath}.${property}`;
     } else {
       return property;
@@ -200,7 +203,15 @@ export default Ember.Component.extend({
     Ember.assert('You must set a property attribute on the {{input-group}} component', this.get('property'));
 
     const propertyWithModel = this.get('propertyWithModel');
-    const binding = Ember.bind(this, 'value', `formController.${propertyWithModel}`);
+    console.log('propertyWithModel unchecked', propertyWithModel);
+
+    let valuePath = `formController.${propertyWithModel}`;
+    if (propertyWithModel.indexOf('model.') === -1) {
+      valuePath = `formController.model.${propertyWithModel}`;
+    }
+    console.log('propertyWithModel checked', propertyWithModel);
+
+    const binding = Ember.bind(this, 'value', valuePath);
 
     this.set('bindingForValue', binding);
   }),
